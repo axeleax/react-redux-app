@@ -1,0 +1,10 @@
+.navbar {
+    background-color: #7F57C2;
+    border-radius: 2px;
+}
+.user-name{
+    font-weight: 600;
+}
+.user-icon{
+    margin-right: 1em;
+}
