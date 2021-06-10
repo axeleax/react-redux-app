@@ -2,9 +2,10 @@ import { React, Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Page from './page';
-import searchPatientById from '../../redux/actions/searchPatientById';
-import searchRefresh from '../../redux/actions/searchRefresh';
-import detailFindFIPPatientById from '../../redux/actions/detailFindFIPPatientById';
+import searchQS1PatientRequest from '../../redux/actions/searchQS1PatientRequest';
+import demographicFindPatientRequest from '../../redux/actions/demographicFindPatientRequest';
+import history from '../../history';
+import TAP_TYPE from '../../enum/tapType';
 
 class Search extends Component {
 
@@ -12,17 +13,15 @@ class Search extends Component {
         super(props)
 
         this.state = {
-            id:'',
-            fip:{
+            patSeqno:'',
+            patient:{
                 id:'',
-                personId:'',
-                qs1Id:'',
                 firstName:'',
                 lastName:'',
                 gender:'',
                 birthday:'',
                 ssn:'',
-                email:'',
+                emails:[],
                 addresses:[],
                 phones:[],
                 link:'',
@@ -34,38 +33,33 @@ class Search extends Component {
                 type:''
             },
         };
-        this.onClick = this.onClick.bind(this);
-        this.onChange = this.onChange.bind(this);
+        this.doSearch = this.doSearch.bind(this);
+        this.onChangePatSeqno = this.onChangePatSeqno.bind(this);
         this.goTo = this.goTo.bind(this);
     }
 
-    onClick() {
+    doSearch() {
         const {
-            searchPatientById,
+            searchQS1PatientRequest,
         } = this.props;
 
-        if(this.state.id){
-            searchPatientById(this.state.id.trim());
+        if(this.state.patSeqno){
+            searchQS1PatientRequest(this.state.patSeqno);  
         }
     }
 
-    onChange(id) {
-        const {
-            searchRefresh,
-        } = this.props;
-
-        let pId = id.trim();
-        this.setState({id:pId});
-        searchRefresh(pId);
+    onChangePatSeqno(event) {
+        let patSeqnoTmp = event.target.value;
+        this.setState({patSeqno:patSeqnoTmp});
     }
 
     goTo(path) {
         const {
-            detailFindFIPPatientById,
+            demographicFindPatientRequest,
         } = this.props;
 
-        detailFindFIPPatientById({id:this.state.id});
-        this.props.history.push(path);
+        demographicFindPatientRequest({id:this.state.patSeqno,type:TAP_TYPE.FD});
+        history.push(path);
     }
 
     render() {
@@ -74,11 +68,11 @@ class Search extends Component {
         
         return (
             <Page 
-                id={search.id}
-                patient={search.fip}
+                loading={search.loading}
+                patient={search.patient}
                 error={search.error}
-                onClick={this.onClick}
-                onChange={this.onChange}
+                doSearch={this.doSearch}
+                onChangePatSeqno={this.onChangePatSeqno}
                 goTo={this.goTo}
             />
         );
@@ -90,9 +84,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    searchPatientById,
-    searchRefresh,
-    detailFindFIPPatientById
+    searchQS1PatientRequest,
+    demographicFindPatientRequest,
 };
 
 export default withRouter(

@@ -3,22 +3,24 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import NavBar from './../navbar';
 import { BiSearchAlt2 } from 'react-icons/bi';
-import { BiShow } from 'react-icons/bi';
+import Preview from '../preview';
+import Alert from '../alert';
+import Spinner from 'react-bootstrap/Spinner';
 import './style.css';
 
 export default function Page(props) {
     const { 
-        id,
+        patSeqno,
         patient,
+        loading,
         error,
-        onClick,
-        onChange,
+        doSearch,
+        onChangePatSeqno,
         goTo,
     } = props;
 
@@ -41,29 +43,28 @@ export default function Page(props) {
                                             <Card.Title>Search Patient</Card.Title>
                                             <Form>
                                                 <Form.Group controlId="patientId">
-                                                    <Form.Label>Patient Id</Form.Label>
-                                                    <Form.Control type="text" placeholder="1212323" value={id}
-                                                    onChange={(event) => {
-                                                            onChange(event.target.value);
-                                                    }}
-                                                    />
+                                                    <Form.Label>Petient Id</Form.Label>
+                                                    <Form.Control type="text" placeholder="FERECA" maxLength={7} minLength={6} value={patSeqno}
+                                                    onChange={onChangePatSeqno} disabled={loading}/>
                                                     <Form.Text className="text-muted">
-                                                    Freedom Patient Id.
+                                                    QS1 Patient Id or PAT_SEQNO.
                                                     </Form.Text>
                                                 </Form.Group>
-                                                <Button variant="secondary" type="button" 
-                                                onClick={() => {
-                                                    onClick();
-                                                }}>
-                                                <BiSearchAlt2 className='btn-icon'/>Search
+                                                <Button variant="secondary" type="button" onClick={doSearch}  disabled={loading}>
+                                                { loading ? 
+                                                    <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="load-spinner-btn"/>
+                                                    :
+                                                    <BiSearchAlt2 className='btn-icon'/>
+                                                }
+                                                Search
                                                 </Button>
                                             </Form>
                                         </Card.Body>
                                     </Card>
                                 </Col>
                                 <Col>
-                                    <ShowPatient show={exists} patient={patient} goTo={goTo}/>
-                                    <AlertMessage show={showError} error={error}/>
+                                    <Preview isVisible={exists} data={patient} goTo={goTo}/>
+                                    <Alert isVisible={showError} data={error}/>
                                 </Col>
                             </Row>
                         </Container>
@@ -73,60 +74,3 @@ export default function Page(props) {
         </Container>       
     );
 }
-
-
-function AlertMessage(props) {
-    if (props.show) {
-        return (
-            <Alert variant={props.error.type} transition={true}>
-            <Alert.Heading><h3>{props.error.code}</h3>{props.error.title}</Alert.Heading>
-                <p>
-                    {props.error.message}
-                </p>
-            </Alert>
-        );
-    }else{
-        return null;
-    }
-}
-
-function ShowPatient(props) {
-    if (props.show) {
-        return (
-            <Card style={{ width: '20rem' }}>
-                <Card.Body>
-                    <Card.Title><span>#{props.patient.id}</span> - <span>{props.patient.firstName+ ' '+ props.patient.lastName}</span></Card.Title>
-                    
-                    <Form>
-                        <Form.Group as={Row} controlId="formFirstName">
-                            <Form.Label column sm="5" className="field">Fisrt Name:</Form.Label>
-                            <Col sm="5"><Form.Control plaintext readOnly defaultValue={props.patient.firstName} /></Col>
-                        </Form.Group>
-                        <Form.Group as={Row} controlId="formLastName">
-                            <Form.Label column sm="5" className="field">Last Name:</Form.Label>
-                            <Col sm="7"><Form.Control plaintext readOnly defaultValue={props.patient.lastName} /></Col>
-                        </Form.Group>
-                        <Form.Group as={Row} controlId="formGender">
-                            <Form.Label column sm="5" className="field">Gender:</Form.Label>
-                            <Col sm="7"><Form.Control plaintext readOnly defaultValue={props.patient.gender} /></Col>
-                        </Form.Group>
-                        <Form.Group as={Row} controlId="formBirthday">
-                            <Form.Label column sm="5" className="field">Birthday:</Form.Label>
-                            <Col sm="7"><Form.Control plaintext readOnly defaultValue={props.patient.birthday} /></Col>
-                        </Form.Group>
-                    </Form>
-                
-                    <Button variant="secondary" type="button" 
-                        onClick={() => props.goTo(props.patient.link)}>
-                        <BiShow className='btn-icon'/>View
-                    </Button>
-        
-                </Card.Body>
-            </Card>
-        );
-    }else{
-        return null;
-    }
-}
-
-

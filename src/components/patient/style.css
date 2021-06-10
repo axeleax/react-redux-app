@@ -1,0 +1,96 @@
+.container{
+    position: relative;
+    padding: 1rem;
+    border: .2rem solid #ececec;
+    border-radius: 8px;
+    margin-right: 0;
+    margin-left: 0;
+    color: #212529;
+    margin: 1em auto;
+}
+
+.jumbotron{
+    display: flex;
+    max-width: 855px;
+    margin: 2em auto 1em auto;
+}
+
+.nav-tabs .nav-link{
+    color: #7F57C2;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+    background-color: #7F57C2;
+    color: #FFF;
+}
+
+.form-group{
+    margin-bottom: .5em;
+}
+
+.nav-tabs .nav-link{
+    color: #7F57C2;
+}
+.fd-nav-item, .lcc-nav-item{
+    text-align: center;
+    margin-top: .5em;
+}
+.fd-nav-item>a, .lcc-nav-item>a{
+    font-weight: 600;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+    font-size: 1.2em;
+}
+
+.fd-nav-item>a.disabled, .lcc-nav-item>a.disabled{
+    opacity: .4;
+}
+
+.fd-nav-item>a.active, .show>.fd-nav-item{
+    border: 1px solid #DF0101;
+    background-color: #DF0101 !important;
+    color: #FFF;
+}
+
+.lcc-nav-item>a.active, .show>.flccnav-item{
+    border: 1px solid #0174DF;
+    background-color: #0174DF !important;
+    color: #FFF;
+}
+
+.lcc-tab{
+    padding: 0 1em 1em 1em;
+    border: 1px solid #0174DF;
+    border-radius: 6px;
+}
+
+.tab-content, .nav-pills{
+    margin-top: 1em;
+}
+
+.form-title{
+    color: #0174DF;
+}
+.actve-tab-FD{
+    color: #DF0101;
+}
+.actve-tab-LCC{
+    color: #0174DF;
+}
+.reload-icon-div{
+    font-size: 2em;
+    position: absolute;
+    right: 0.5em;
+    color: #7F57C2;
+    top: 0em;
+    cursor: pointer;
+}
+.load-spinner{
+    position: absolute;
+    top: .5em;
+    border: .1em solid currentColor;
+    border-right-color: transparent;
+}
+.icon-loading{
+    color: #D7DBDD;
+}

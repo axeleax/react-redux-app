@@ -1,20 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+import { Router, Route, Switch} from 'react-router-dom';
 import store from './redux/store';
-import Detail from './components/detail';
+import Login from './components/login';
+import Patient from './components/patient';
 import Search from './components/search';
+import history from './history';
 
 const Root = (
     <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
             <Switch>
-                <Route path="/search" component={Search} />
-                <Route path="/patient/:id" component={Detail} />
-                <Redirect from="/" to="/search" />
+                <Route exact path="/" component={Login} />
+                <Route exact path="/search" component={Search} />
+                <Route exact path="/patient/:id" component={Patient} />
             </Switch>
-        </BrowserRouter>
+        </Router>
     </Provider>
 );
 

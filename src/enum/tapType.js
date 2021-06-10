@@ -1,2 +1,2 @@
-const TAP_TYPE = {'FIP':'FIP', 'PERRSON':'', 'QS1':'QS1'}
+const TAP_TYPE = {'FD':'FD', 'LCC':'LCC'}
 export default TAP_TYPE;

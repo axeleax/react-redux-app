@@ -1,0 +1,10 @@
+.field{
+    font-weight: 600;
+    padding-right: 1em;
+}
+.card-title{
+    background-color: #7F57C2;
+    color: #ffffff;
+    padding: 0.5em;
+    border-radius: 2px;
+}

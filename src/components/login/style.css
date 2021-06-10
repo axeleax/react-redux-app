@@ -8,10 +8,20 @@
     color: #212529;
     margin: 1em auto;
 }
+
 .jumbotron{
     display: flex;
     max-width: 855px;
     margin:2em auto 1em auto;
+}
+
+.btn {
+    float: right;
+}
+
+.field{
+    font-weight: 600;
+    padding-right: 1em;
 }
 
 .field-frame{
@@ -20,10 +30,17 @@
     border-radius: 2px;
     margin: 1em 0;
 }
-.btn-icon{
+
+.card-title{
+    background-color: #7F57C2;
+    color: #ffffff;
+    padding: 0.5em;
+    border-radius: 2px;
+}
+.btn-icon, .load-spinner-btn{
     margin-right: .5em;
 }
-
-.btn {
-    float: right;
+.app-title{
+    text-align: center;
+    color: #7F57C2;
 }

@@ -1,21 +1,25 @@
-import { type as searchPatientByIdType} from '../actions/searchPatientById';
-import { type as searchRefreshType} from '../actions/searchRefresh';
-
-import fipPatients from '../../data/fipPatientList';
+import { type as searchQS1PatientRequestType} from '../actions/searchQS1PatientRequest';
+import { type as searchQS1PatientSuccesType} from '../actions/searchQS1PatientSuccess';
+import { type as searchQS1PatientErrorType} from '../actions/searchQS1PatientError';
 
 const defaultState = {
-    fip:{
+    loading:'',
+    patient:{
         id:'',
-        personId:'',
-        qs1Id:'',
         firstName:'',
         lastName:'',
         gender:'',
         birthday:'',
         ssn:'',
         email:'',
-        addresses:[],
-        phones:[],
+        address:{
+            address1:'', 
+            address2:'',
+            city:'',
+            state:'',
+            zip:''
+        },
+        phone:'',
         link:'',
     },
     error:{
@@ -26,51 +30,26 @@ const defaultState = {
     },
 };
 
-function reducer(state = defaultState, { type, payload }) {
+function reducer(state = defaultState, action) {
 
-    switch (type) {
+    switch (action.type) {
     
-        case searchPatientByIdType:
-            
-            let patient = fipPatients.filter(n =>n.id === payload);
-            if(patient.length === 0){
-                return {
-                    fip:defaultState.fip,
-                    error:{
-                        title:'Patient not found', 
-                        code:'404 - Hoops!', 
-                        message:'We can`t found a Patient with the id ('+ payload +'), please tray again !!',
-                        type:'warning'
-                    }
-                }
+        case searchQS1PatientRequestType:
+            return {...state, loading:true};
+
+        case searchQS1PatientSuccesType:
+            return {...state, patient:action.patient, error:defaultState.error, loading:false};
+
+        case searchQS1PatientErrorType:
+
+            const error =  {
+                title:'Patient not found', 
+                code:'404 - Hoops!', 
+                message:'We can`t found a Patient with the id ('+ action.payload +'), please tray again !!',
+                type:'warning'
             }
 
-            return { 
-                fip:{
-                    id:patient[0].id,
-                    personId:patient[0].personId,
-                    qs1Id:patient[0].qs1Id,
-                    firstName:patient[0].firstName,
-                    lastName:patient[0].lastName,
-                    gender:patient[0].gender,
-                    birthday:patient[0].birthday,
-                    ssn:patient[0].ssn,
-                    email:patient[0].email,
-                    addresses:patient[0].addresses,
-                    phones:patient[0].phones,
-                    link: `/patient/${patient[0].id}`
-                },
-                error:defaultState.error
-            }
-
-        case  searchRefreshType:
-            if(payload === ""){
-                return defaultState;
-            }
-            return {
-                fip:defaultState.fip,
-                error:defaultState.error
-            };
+            return  {...state, patient:defaultState.patient ,error : error, loading:false};
             
         default:
             return state;

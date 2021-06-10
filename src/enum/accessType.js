@@ -1,0 +1,2 @@
+const ACCESS_TYPE = {'DENIED':'DENIED', 'GRANTED':'GRANTED'}
+export default ACCESS_TYPE;
