@@ -1,5 +1,6 @@
 import { React, Component} from 'react';
 import { connect } from 'react-redux';
+import SEGMENT_TYPE from '../../enum/segmentType';
 import demographicFindPatientRequest from '../../redux/actions/demographicFindPatientRequest';
 import Page from './page';
 
@@ -9,7 +10,9 @@ class Demographic extends Component {
         super(props);
         
         this.state = {
-            activeTab:'',
+            patSeqno:'',
+            activePatientTab:'',
+            activeSegmentTab:SEGMENT_TYPE.DEMOGRAPHIC,
             data:{
                 id:'',
                 firstName:'',
@@ -39,35 +42,39 @@ class Demographic extends Component {
         this.doReload = this.doReload.bind(this);
     }
 
-    doReload(activeTab,demographic) {
+    doReload(activePatientTab,patSeqno) {
         const {
             demographicFindPatientRequest,
         } = this.props;
 
-        this.setState({activeTab:activeTab});
-        demographicFindPatientRequest({id:demographic.id,type:activeTab});
+        this.setState({activePatientTab:activePatientTab,patSeqno:patSeqno});
+        demographicFindPatientRequest({id:patSeqno,patientType:activePatientTab});
     }
 
     render() {
         
         const {
+            search,
             demographic,
-            activeTab,
+            activePatientTab,
         } = this.props;
 
         return (
             <Page 
                 loading={demographic.loading}
                 data={demographic.data}
-                activeTab={activeTab}
+                patSeqno={search.patient.id}
+                activePatientTab={activePatientTab}
                 doReload={this.doReload}
+                error={demographic.error}
             />
         );
     }
 }
 
 const mapStateToProps = state => ({
-    demographic:state.demographic
+    demographic:state.demographic,
+    search: state.search,
 });
 
 const mapDispatchToProps = {

@@ -3,9 +3,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Page from './page';
 import searchQS1PatientRequest from '../../redux/actions/searchQS1PatientRequest';
+import searchReset from '../../redux/actions/searchReset';
 import demographicFindPatientRequest from '../../redux/actions/demographicFindPatientRequest';
+import patientTypeSelect from '../../redux/actions/patientTypeSelect';
+import patientSegmentSelect from '../../redux/actions/patientSegmentSelect';
 import history from '../../history';
-import TAP_TYPE from '../../enum/tapType';
+import PATIENT_TYPE from '../../enum/patientType';
+import SEGMENT_TYPE from '../../enum/segmentType';
 
 class Search extends Component {
 
@@ -49,16 +53,28 @@ class Search extends Component {
     }
 
     onChangePatSeqno(event) {
+        const {
+            searchReset,
+        } = this.props;
+
         let patSeqnoTmp = event.target.value;
         this.setState({patSeqno:patSeqnoTmp});
+        if(patSeqnoTmp.trim()===''){
+            searchReset();
+        }
     }
 
     goTo(path) {
         const {
             demographicFindPatientRequest,
+            patientTypeSelect,
+            patientSegmentSelect,
         } = this.props;
 
-        demographicFindPatientRequest({id:this.state.patSeqno,type:TAP_TYPE.FD});
+        patientTypeSelect(PATIENT_TYPE.FD);
+        patientSegmentSelect(SEGMENT_TYPE.DEMOGRAPHIC);
+        demographicFindPatientRequest({id:this.state.patSeqno,patientType:PATIENT_TYPE.FD});
+
         history.push(path);
     }
 
@@ -85,7 +101,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     searchQS1PatientRequest,
+    searchReset,
     demographicFindPatientRequest,
+    patientTypeSelect,
+    patientSegmentSelect,
 };
 
 export default withRouter(

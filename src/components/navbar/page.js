@@ -10,7 +10,7 @@ export default function Page(props) {
         <Navbar variant="dark">
             <Navbar.Brand>QS1 Application</Navbar.Brand>
             <Nav className="mr-auto">
-                <Nav.Link href="/search">Home</Nav.Link>
+                <Nav.Link href="/search">Search</Nav.Link>
             </Nav>  
             <Navbar.Text>
                 <IconContext.Provider value={{ color: "#FFF", className: "user-icon", size:"2em" }}>

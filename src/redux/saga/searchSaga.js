@@ -3,12 +3,12 @@ import { type as searchQS1PatientRequestType} from '../actions/searchQS1PatientR
 import { type as searchQS1PatientSuccessType} from '../actions/searchQS1PatientSuccess';
 import { type as searchQS1PatientErrorType} from '../actions/searchQS1PatientError';
 
-import qs1FDPatientList from '../../data/qs1FDPatientList';
+import searchPatientList from '../../data/searchPatientList';
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 function simulateGetApi(action){
 
-  let patient = qs1FDPatientList.filter(n =>n.id === action.payload);
+  let patient = searchPatientList.filter(n =>n.id === action.payload);
   if(patient.length === 0){
     throw new Error(404);
   }
@@ -22,6 +22,7 @@ function* searchQS1PatientRequest(action) {
   try{
     yield delay(1000);
     const patient = simulateGetApi(action);
+    console.log('search',patient);
     yield put({type:searchQS1PatientSuccessType,patient});
   }catch(error){
     yield put({type:searchQS1PatientErrorType,error});

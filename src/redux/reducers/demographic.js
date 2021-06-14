@@ -35,10 +35,10 @@ function reducer(state = defaultState, action) {
     switch (action.type) {
 
 
-        case  demographicFindPatientRequestType:
-            return {...state, loading:true};
+        case demographicFindPatientRequestType:
+            return {...state, data:defaultState.data, error:defaultState.error, loading:true};
 
-        case  demographicFindPatientSuccessType:
+        case demographicFindPatientSuccessType:
             return {...state, data:action.data, error:defaultState.error, loading:false};
 
         case demographicFindPatientErrorType:
@@ -46,11 +46,11 @@ function reducer(state = defaultState, action) {
             const error =  {
                 title:'Patient`s demographic not found', 
                 code:'404 - Hoops!', 
-                message:'We can`t found a Patient`s demographic with, please tray again !!',
+                message:'We can`t found a Patient`s demographic, please tray again !!',
                 type:'warning'
             }
 
-            return  {...state, demographic:defaultState.demographic ,error : error, loading:false};
+            return  {...state, data:defaultState.data ,error : error, loading:false};
 
         default:
             return state;

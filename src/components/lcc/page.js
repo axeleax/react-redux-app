@@ -2,41 +2,47 @@ import React from 'react';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import Container from 'react-bootstrap/Container';
-import Alert from '../alert';
 import Demographic from '../demographic';
-import TAP_TYPE from '../../enum/tapType';
+import Insurance from '../insurance';
+import RxProfile from '../rxprofile';
+import PATIENT_TYPE from '../../enum/patientType';
+import SEGMENT_TYPE from '../../enum/segmentType';
 import './style.css';
 
 export default function Page(props) {
+    const { 
+        patSeqno,
+        activeSegment,
+        onSelectTab,
+    } = props;
+
     return (
-        <RenderFDDetail data={props.data} error={props.error}/>               
+        <RenderFDDetail patSeqno={patSeqno} onSelectTab={onSelectTab} activeSegment={activeSegment}/>               
     );
 }
 
 function RenderFDDetail(props) {
     const { 
-        data,
-        error,
+        patSeqno,
+        activeSegment,
+        onSelectTab,
     } = props;
 
-    const showError = (error !== undefined && error.code !== '');
-
     return (
-        showError ?
-            <Alert isVisible={true} data={error}/> 
-        :
-            <Container>
-            <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
-                <Tab eventKey="profile" title="Demographic">
-                    <Demographic data={data} activeTab={TAP_TYPE.LCC}/>
+        <Container>
+            <Tabs activeKey={activeSegment} id="uncontrolled-tab-example" onSelect={(activeSegmentTab ) => {
+                                                                                                onSelectTab(activeSegmentTab,patSeqno);
+                                                                                            }}>  
+                <Tab eventKey={SEGMENT_TYPE.DEMOGRAPHIC} title="Demographic">
+                    <Demographic activePatientTab={PATIENT_TYPE.LCC}/>
                 </Tab>
-                <Tab eventKey="insurance" title="Insurance">
-                Insurance
+                <Tab eventKey={SEGMENT_TYPE.INSURANCE} title="Insurance">
+                    <Insurance activePatientTab={PATIENT_TYPE.LCC}/>
                 </Tab>
-                <Tab eventKey="rxprofile" title="RX Profile">
-                RX Profile
+                <Tab eventKey={SEGMENT_TYPE.RX_PROFILE} title="RX Profile">
+                    <RxProfile activePatientTab={PATIENT_TYPE.LCC}/>
                 </Tab>
             </Tabs>
-            </Container>                
+        </Container>                
     );
 }

@@ -11,17 +11,6 @@ const  patients = [
         phone:'5555555555'
     },
     {
-        id: 'LDIAZ',
-        firstName:'Luis',
-        lastName:'Diaz',
-        gender:'M',
-        birthday:'01/03/1990',
-        ssn:'111111111',
-        email:'work@mail.com',
-        address:{address1:'42 Fairhaven Commons Way', address2:'',city:'Fairhaven',state:'MA',zip:'2719'},
-        phone:'5555555555'
-    },
-    {
         id: 'ATORRES',
         firstName:'Aaron',
         lastName:'Torres',

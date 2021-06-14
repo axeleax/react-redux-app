@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import TAP_TYPE from './../../enum/tapType';
+import PATIENT_TYPE from './../../enum/patientType';
 import Page from './page';
 import demographicFindPatientRequest from '../../redux/actions/demographicFindPatientRequest';
+import insuranceFindPatientRequest from '../../redux/actions/insuranceFindPatientRequest';
+import rxProfileFindPatientRequest from '../../redux/actions/rxProfileFindPatientRequest';
+import searchReset from '../../redux/actions/searchReset';
+import patientTypeSelect from '../../redux/actions/patientTypeSelect';
+import SEGMENT_TYPE from '../../enum/segmentType';
 
 class Patient extends Component {
     constructor(props) {
@@ -14,7 +19,7 @@ class Patient extends Component {
         } = this.props;
         
         this.state = {
-            activeTab:TAP_TYPE.FD,
+            activePatientTab:PATIENT_TYPE.FD,
             error:{
                 title:'', 
                 code:'', 
@@ -28,40 +33,66 @@ class Patient extends Component {
         }
 
         this.onSelectTab = this.onSelectTab.bind(this);
-        this.goTo = this.goTo.bind(this);
+        this.onBack = this.onBack.bind(this);
     }
 
-    onSelectTab(activeTab,patSeqno) {
+    onBack(path) {
         const {
-            demographicFindPatientRequest,
+            searchReset,
         } = this.props;
 
-        this.setState({activeTab:activeTab});
-
-        demographicFindPatientRequest({id:patSeqno,type:activeTab});
+        searchReset();
+        this.props.history.push(path);
     }
 
-    goTo(path) {
-        this.props.history.push(path);
+
+    onSelectTab(activePatientTab) {
+        const {
+            search,
+            patient,
+            demographicFindPatientRequest,
+            insuranceFindPatientRequest,
+            rxProfileFindPatientRequest,
+            patientTypeSelect,
+        } = this.props;
+
+        this.setState({activePatientTab:activePatientTab});
+        patientTypeSelect(activePatientTab);
+        
+        switch(patient.activeSegmentTab){
+            case SEGMENT_TYPE.DEMOGRAPHIC:
+                demographicFindPatientRequest({id:search.patient.id,patientType:activePatientTab});    
+            break;
+            case SEGMENT_TYPE.INSURANCE:
+                insuranceFindPatientRequest({id:search.patient.id,patientType:activePatientTab});
+            break;
+            case SEGMENT_TYPE.RX_PROFILE:
+                rxProfileFindPatientRequest({id:search.patient.id,patientType:activePatientTab});
+            break;
+            default:
+                break;
+        }
     }
 
     render() {
         const {
-            search,
             demographic,
+            insurance,
+            rxProfile,
         } = this.props;
 
         const {
-            activeTab,
+            activePatientTab,
         } = this.state;
 
+        const isLoading = (demographic.loading || insurance.loading || rxProfile.loading);
+        
         return (
             <Page
-                loading = {demographic.loading}
-                activeTab={activeTab}
-                patSeqno={search.patient.id}
+                loading = {isLoading}
+                activePatientTab={activePatientTab}
                 onSelectTab={this.onSelectTab}
-                goTo={this.goTo}
+                onBack={this.onBack}
             />
         );
     }
@@ -69,11 +100,18 @@ class Patient extends Component {
 
 const mapStateToProps = state => ({
     search: state.search,
-    demographic:state.demographic
+    patient: state.patient,
+    demographic:state.demographic,
+    insurance:state.insurance,
+    rxProfile:state.rxProfile,
 });
 
 const mapDispatchToProps = {
     demographicFindPatientRequest,
+    insuranceFindPatientRequest,
+    rxProfileFindPatientRequest,
+    searchReset,
+    patientTypeSelect,
 };
 
 export default withRouter(

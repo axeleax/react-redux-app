@@ -5,8 +5,8 @@ const  patients = [
         lastName:'Del Angel',
         gender:'M',
         birthday:'10/06/1983',
-        ssn:'111111111',
-        email:'personal@mail.com',
+        ssn:'5454545445',
+        email:'work@mail.com',
         address:{address1:'137 Teaticket Hwy', address2:'TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest',city:'East Falmouth',state:'MA',zip:'2536'},
         phone:'5555555555'
     },
@@ -16,8 +16,8 @@ const  patients = [
         lastName:'Diaz',
         gender:'M',
         birthday:'01/03/1990',
-        ssn:'111111111',
-        email:'work@mail.com',
+        ssn:'45454555445',
+        email:'personal@mail.com',
         address:{address1:'42 Fairhaven Commons Way', address2:'',city:'Fairhaven',state:'MA',zip:'2719'},
         phone:'5555555555'
     },
@@ -27,7 +27,7 @@ const  patients = [
         lastName:'Torres',
         gender:'M',
         birthday:'01/03/1990',
-        ssn:'111111111',
+        ssn:'9887754466',
         email:'personal@mail.com',
         address:{address1:'101 Sanford Farm Shpg Center', address2:'',city:'Amsterdam',state:'NY',zip:'12010'},
         phone:'5555555555'
@@ -38,7 +38,7 @@ const  patients = [
         lastName:'Coronado',
         gender:'M',
         birthday:'01/03/1990',
-        ssn:'111111111',
+        ssn:'23232333222',
         email:'work@mail.com',
         address:{address1:'6265 Brockport Spencerport Rd', address2:'',city:'Brockport',state:'NY',zip:'14420'},
         phone:'5555555555'
@@ -49,7 +49,7 @@ const  patients = [
         lastName:'Kumar',
         gender:'M',
         birthday:'01/03/1990',
-        ssn:'111111111',
+        ssn:'2323222334',
         email:'work@mail.com',
         address:{address1:'5919 Trussville Crossings Pkwy', address2:'',city:'Birmingham',state:'AL',zip:'35235'},
         phone:'5555555555'

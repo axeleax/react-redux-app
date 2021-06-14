@@ -1,6 +1,7 @@
 import { type as searchQS1PatientRequestType} from '../actions/searchQS1PatientRequest';
 import { type as searchQS1PatientSuccesType} from '../actions/searchQS1PatientSuccess';
 import { type as searchQS1PatientErrorType} from '../actions/searchQS1PatientError';
+import { type as searchResetType} from '../actions/searchReset';
 
 const defaultState = {
     loading:'',
@@ -50,6 +51,8 @@ function reducer(state = defaultState, action) {
             }
 
             return  {...state, patient:defaultState.patient ,error : error, loading:false};
+        case searchResetType:
+            return defaultState;  
             
         default:
             return state;

@@ -18,6 +18,7 @@ function* loginRequest() {
   try{
     yield delay(2000);
     const credentials = simulateGetApi();
+    console.log('login',credentials);
     yield put({type:loginSuccessType,credentials});
   }catch(error){
     yield put({type:loginErrorType,error});

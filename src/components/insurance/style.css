@@ -1,0 +1,18 @@
+.form-textarea{
+    resize: none;
+    overflow-y: auto;
+}
+.divider{
+    border: 1px solid #ececec;
+    margin: 1em 0;
+}
+
+.form-check {
+    padding-left: 1.7rem;
+    text-align: center;
+}
+
+.option-detail{
+    background-color: #ececec;
+    margin: 0em;
+}

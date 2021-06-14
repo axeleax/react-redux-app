@@ -1,8 +1,8 @@
 export const type = 'SEARCH_QS1_PATIENT_SUCCESS';
 
-const searchQS1PatientSuccess = (demographic) => ({
+const searchQS1PatientSuccess = (patient) => ({
     type,
-    payload: demographic,
+    payload: patient,
 });
 
 export default searchQS1PatientSuccess;

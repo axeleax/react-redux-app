@@ -64,6 +64,12 @@
     border-radius: 6px;
 }
 
+.fd-tab{
+    padding: 0 1em 1em 1em;
+    border: 1px solid #DF0101;
+    border-radius: 6px;
+}
+
 .tab-content, .nav-pills{
     margin-top: 1em;
 }
@@ -94,3 +100,36 @@
 .icon-loading{
     color: #D7DBDD;
 }
+.table-responsive{
+    height: auto;
+    max-height: 10em;
+    overflow-y: auto;
+    display: block;
+}
+.loading-text{
+    color: #65459b;
+    background-color: #e5ddf2;
+    border-color: #bfabe0;
+    padding: 1em;
+    text-align: center;
+    border-radius: .25rem;
+}
+
+.drugs-not-found{
+    color: #664d03;
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+    padding: 1em;
+    text-align: center;
+    border-radius: .25rem;
+}
+
+.modal-header {
+    background-color: #7F57C2;
+    color: #fff;
+}
+
+.modal-header > button span {
+    color:#FFF;
+}
+
