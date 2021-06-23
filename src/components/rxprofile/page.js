@@ -9,8 +9,11 @@ import Container from 'react-bootstrap/Container';
 import { BiCloudDownload } from "react-icons/bi";
 import Spinner from 'react-bootstrap/Spinner';
 import Alert from '../alert';
-import { IoClose } from "react-icons/io5";
+import History from '../history';
+import Pagination from 'react-bootstrap/Pagination';
+import { BiLogOut } from "react-icons/bi";
 import { BiHistory } from "react-icons/bi";
+
 import './style.css';
 
 export default function Page(props) {
@@ -18,26 +21,28 @@ export default function Page(props) {
     const { 
         loading,
         data,
-        patSeqno,
         drugSelected,
-        activePatientTab,
         isReset,
+        loadingTable,
+        activePage,
         isModalOpen,
         doReload,
         doSelectDrug,
         doModalShow, 
+        doSelectPage,
+        tableError,
         error
     } = props;
 
     const showError = ((error !== undefined && error.code !== ''));
+    const showErrorTable = ((tableError !== undefined && tableError.code !== ''));
     const showoOptionDetail = ((drugSelected !== undefined && drugSelected.rxNumber !== ''));
-    const isEmpty = (data.drugs.length === 0);
 
     return (
         <div>
             <div className="reload-icon-div">
                 { loading && <Spinner as="span" animation="border" size="md" role="status" aria-hidden="true" className="load-spinner"/>}
-                <BiCloudDownload className={loading && 'icon-loading'} onClick={() => {doReload(activePatientTab,patSeqno)}} disabled={loading}/> 
+                <BiCloudDownload className={loading && 'icon-loading'} onClick={doReload} disabled={loading}/> 
             </div>
             {showError ? 
                 <Alert isVisible={showError} data={error}/>
@@ -60,13 +65,21 @@ export default function Page(props) {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col> 
-                                <RxProfileTable data={data.drugs} doSelectDrug={doSelectDrug} 
-                                drugSelected={drugSelected} isReset={isReset} isEmpty={isEmpty} loading={loading}/>
-                            </Col>
-                        </Row>
-                        {!isEmpty && <div className="divider"/>}
+                        
+                        { showErrorTable ? <Alert isVisible={showErrorTable} data={tableError}/>
+                        :
+                                loadingTable ? 
+                                    <div className={'loading-text'}><h4>Loading...</h4></div>
+                                :
+                                    <Row>
+                                        <Col> 
+                                            <RxProfileTable data={data.drugs} doSelectDrug={doSelectDrug} 
+                                            drugSelected={drugSelected} isReset={isReset} loading={loading}/>
+                                            <RenderPaginator count={data.count} active={activePage} doSelectPage={doSelectPage}/>
+                                        </Col>
+                                    </Row>
+                        }
+                        {!showErrorTable && <div className="divider"/>}
                         <DrugDetail data={drugSelected} isVisible={showoOptionDetail}  isModalOpen={isModalOpen} doModalShow={doModalShow}/>
                     </Form>
             }  
@@ -100,13 +113,13 @@ function DrugDetail(props) {
                 <Col> 
                     <Form.Group as={Row} controlId="formDrug">
                         <Form.Label column sm="5" className="field">Drug:</Form.Label>
-                        <Col sm="7"><Form.Control plaintext readOnly value={data.drug} /></Col>
-                    </Form.Group>  
+                        <Col sm="7"><Form.Control as="textarea" className="form-textarea" readOnly value={data.drug} /></Col>
+                    </Form.Group>
                 </Col>
                 <Col> 
                     <Form.Group as={Row} controlId="formGeneric">
                         <Form.Label column sm="5" className="field">Generic:</Form.Label>
-                        <Col sm="7"><Form.Control plaintext readOnly value={data.generic} /></Col>
+                        <Col sm="7"><Form.Control as="textarea" className="form-textarea" readOnly value={data.generic} /></Col>
                     </Form.Group>
                 </Col>
             </Row>
@@ -169,7 +182,7 @@ function DrugDetail(props) {
 
 function TransactionalHistory(props) {
     return (
-      <Modal {...props} centered={true}  aria-labelledby="contained-modal-title-vcenter">
+      <Modal {...props} centered={true} size="lg" aria-labelledby="contained-modal-title-vcenter">
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Transaction History
@@ -177,18 +190,18 @@ function TransactionalHistory(props) {
         </Modal.Header>
         <Modal.Body className="show-grid">
           <Container>
+            <History />
           </Container>
         </Modal.Body>
         <Modal.Footer>
-        <Button variant="secondary" onClick={props.onHide}>
-            <IoClose className='btn-icon'/>Close
-        </Button>
+            <Button variant="secondary" size="md"onClick={props.onHide}>
+                <BiLogOut className='btn-icon'/>Back
+            </Button>
         </Modal.Footer>
       </Modal>
     );
-  }
+}
   
-
 function RxProfileTable(props) {
     if(props.isEmpty){
             return <div className={'drugs-not-found'}><h5>Drugs not found !!</h5></div>
@@ -232,5 +245,31 @@ function RenderRows(props) {
         )
     })   
 }
+
+function RenderPaginator(props) {
+    const {
+        active, 
+        count,
+        doSelectPage
+    } = props;
+
+    const pages = Math.ceil(count / 5);
+    let items = [];
+    for (let number = 1; number <= pages; number++) {
+        items.push(
+            <Pagination.Item key={number} active={number === active} onClick={ ()=> {doSelectPage(number);}}>
+              {number}
+            </Pagination.Item>,
+          );
+    };
+
+    return (
+        pages > 1 &&
+            <div className="pagination-row">
+            <Pagination size="sm">{items}</Pagination>
+            </div>
+    );
+}
+
 
 

@@ -3,14 +3,8 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Container from 'react-bootstrap/Container';
-import { BiCloudDownload } from "react-icons/bi";
-import Spinner from 'react-bootstrap/Spinner';
 import Alert from '../alert';
-import { IoClose } from "react-icons/io5";
-import { BiHistory } from "react-icons/bi";
+import Pagination from 'react-bootstrap/Pagination';
 import './style.css';
 
 export default function Page(props) {
@@ -18,27 +12,22 @@ export default function Page(props) {
     const { 
         loading,
         data,
-        patSeqno,
-        drugSelected,
-        activePatientTab,
+        transactionSelected,
         isReset,
-        isModalOpen,
-        doReload,
-        doSelectDrug,
-        doModalShow, 
+        loadingTable,
+        activePage,
+        doSelectTransaction,
+        doSelectPage,
+        tableError,
         error
     } = props;
 
     const showError = ((error !== undefined && error.code !== ''));
-    const showoOptionDetail = ((drugSelected !== undefined && drugSelected.rxNumber !== ''));
-    const isEmpty = (data.drugs.length === 0);
+    const showErrorTable = ((tableError !== undefined && tableError.code !== ''));
+    const showoOptionDetail = ((transactionSelected !== undefined && transactionSelected.transaction !== ''));
 
     return (
         <div>
-            <div className="reload-icon-div">
-                { loading && <Spinner as="span" animation="border" size="md" role="status" aria-hidden="true" className="load-spinner"/>}
-                <BiCloudDownload className={loading && 'icon-loading'} onClick={() => {doReload(activePatientTab,patSeqno)}} disabled={loading}/> 
-            </div>
             {showError ? 
                 <Alert isVisible={showError} data={error}/>
             :
@@ -60,14 +49,21 @@ export default function Page(props) {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col> 
-                                <RxProfileTable data={data.drugs} doSelectDrug={doSelectDrug} 
-                                drugSelected={drugSelected} isReset={isReset} isEmpty={isEmpty} loading={loading}/>
-                            </Col>
-                        </Row>
-                        {!isEmpty && <div className="divider"/>}
-                        <DrugDetail data={drugSelected} isVisible={showoOptionDetail}  isModalOpen={isModalOpen} doModalShow={doModalShow}/>
+                        { showErrorTable ? <Alert isVisible={showErrorTable} data={tableError}/>
+                        :
+                                loadingTable ? 
+                                    <div className={'loading-text'}><h4>Loading...</h4></div>
+                                :
+                                <Row>
+                                    <Col> 
+                                        <TransactionHistoryTable data={data.transactions} doSelectTransaction={doSelectTransaction} 
+                                        transactionSelected={transactionSelected} isReset={isReset} loading={loading}/>
+                                         <RenderPaginator count={data.count} active={activePage} doSelectPage={doSelectPage}/>
+                                    </Col>
+                                </Row>   
+                        }
+                        {!showErrorTable && <div className="divider"/>}
+                        <TransactionDetail data={transactionSelected} isVisible={showoOptionDetail}/>
                     </Form>
             }  
         </div>      
@@ -75,12 +71,10 @@ export default function Page(props) {
 }
 
 
-function DrugDetail(props) {
+function TransactionDetail(props) {
     const {
         isVisible, 
-        data,
-        isModalOpen,
-        doModalShow,
+        data
     } = props;
 
     return(
@@ -88,9 +82,9 @@ function DrugDetail(props) {
         <div>
             <Row className={'option-detail'}>
                 <Col> 
-                    <Form.Group as={Row} controlId="formRxNumber">
-                        <Form.Label column sm="5" className="field">RxNumber:</Form.Label>
-                        <Col sm="5"><Form.Control plaintext readOnly value={data.rxNumber} /></Col>
+                    <Form.Group as={Row} controlId="formTransaction">
+                        <Form.Label column sm="5" className="field">Transaction:</Form.Label>
+                        <Col sm="5"><Form.Control plaintext readOnly value={data.transaction} /></Col>
                     </Form.Group>  
                 </Col>
                 <Col> 
@@ -98,139 +92,105 @@ function DrugDetail(props) {
             </Row>
             <Row className={'option-detail'}>
                 <Col> 
-                    <Form.Group as={Row} controlId="formDrug">
-                        <Form.Label column sm="5" className="field">Drug:</Form.Label>
-                        <Col sm="7"><Form.Control plaintext readOnly value={data.drug} /></Col>
+                    <Form.Group as={Row} controlId="formPricePlan">
+                        <Form.Label column sm="5" className="field">Price Plan:</Form.Label>
+                        <Col sm="7"><Form.Control plaintext readOnly value={data.pricePlan} /></Col>
                     </Form.Group>  
                 </Col>
                 <Col> 
-                    <Form.Group as={Row} controlId="formGeneric">
-                        <Form.Label column sm="5" className="field">Generic:</Form.Label>
-                        <Col sm="7"><Form.Control plaintext readOnly value={data.generic} /></Col>
+                    <Form.Group as={Row} controlId="formPriceType">
+                        <Form.Label column sm="5" className="field">Price Type:</Form.Label>
+                        <Col sm="7"><Form.Control plaintext readOnly value={data.priceType} /></Col>
                     </Form.Group>
                 </Col>
             </Row>
             <Row className={'option-detail'}>
                 <Col> 
-                    <Form.Group as={Row} controlId="formAuthirized">
-                        <Form.Label column sm="5" className="field">Authirized:</Form.Label>
-                        <Col sm="7"><Form.Control plaintext readOnly value={data.authirized} /></Col>
+                    <Form.Group as={Row} controlId="formAuthirization">
+                        <Form.Label column sm="5" className="field">Authirization:</Form.Label>
+                        <Col sm="7"><Form.Control plaintext readOnly value={data.authirization} /></Col>
                     </Form.Group>
                 </Col>
                 <Col> 
-                    <Form.Group as={Row} controlId="formDispensed">
-                        <Form.Label column sm="5" className="field">Dispensed:</Form.Label>
-                        <Col sm="7"><Form.Control plaintext readOnly value={data.dispensed} /></Col>
-                    </Form.Group>
-                </Col>
-            </Row>
-            <Row className={'option-detail'}>
-                <Col> 
-                    <Form.Group as={Row} controlId="formQuantity">
-                        <Form.Label column sm="5" className="field">Quantity:</Form.Label>
-                        <Col sm="7"><Form.Control plaintext readOnly value={data.quantity} /></Col>
-                    </Form.Group>
-                </Col>
-                <Col> 
-                    <Form.Group as={Row} controlId="formDate">
-                        <Form.Label column sm="5" className="field">Date:</Form.Label>
-                        <Col sm="7"><Form.Control plaintext readOnly value={data.date} /></Col>
+                    <Form.Group as={Row} controlId="formCopay">
+                        <Form.Label column sm="5" className="field">Copay:</Form.Label>
+                        <Col sm="7"><Form.Control plaintext readOnly value={data.copay} /></Col>
                     </Form.Group>
                 </Col>
             </Row>
             <Row className={'option-detail'}>
                 <Col> 
-                    <Form.Group as={Row} controlId="formRefillsRemaining">
-                        <Form.Label column sm="5" className="field">Refills Remaining:</Form.Label>
-                        <Col sm="7"><Form.Control plaintext readOnly value={data.refillsRemaining} /></Col>
-                    </Form.Group>
-                </Col>
-                <Col> 
-                </Col>
-            </Row>
-            <Row className={'option-detail'}>
-                <Col> 
-                    <Form.Group as={Row} controlId="formPatLastPaid">
-                        <Form.Label column sm="5" className="field">Pat Last Paid:</Form.Label>
-                        <Col sm="7"><Form.Control plaintext readOnly value={data.patLastPaid} /></Col>
-                    </Form.Group>
-                </Col>
-                <Col> 
-                    <Button variant="secondary" size="md" onClick={() => doModalShow(true)} >
-                        <BiHistory className='btn-icon'/> Transaction History
-                    </Button>
-
-                    <TransactionalHistory show={isModalOpen} onHide={() => doModalShow(false)} />p
+                    <h5>More details ...</h5>
                 </Col>
             </Row>
         </div>
     );
 }
 
-function TransactionalHistory(props) {
+function TransactionHistoryTable(props) {
     return (
-      <Modal {...props} centered={true}  aria-labelledby="contained-modal-title-vcenter">
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Transaction History
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="show-grid">
-          <Container>
-          </Container>
-        </Modal.Body>
-        <Modal.Footer>
-        <Button variant="secondary" onClick={props.onHide}>
-            <IoClose className='btn-icon'/>Close
-        </Button>
-        </Modal.Footer>
-      </Modal>
+        <Table bordered responsive size="sm">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Transaction</th>
+                    <th>Date</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Price Plan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <RenderRows data={props.data} doSelectTransaction={props.doSelectTransaction} 
+                transactionSelected={props.transactionSelected} isReset={props.isReset}/>
+            </tbody>
+        </Table>
     );
-  }
-  
-
-function RxProfileTable(props) {
-    if(props.isEmpty){
-            return <div className={'drugs-not-found'}><h5>Drugs not found !!</h5></div>
-    }else{
-        return (
-            <Table bordered responsive size="sm">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>RxNumber</th>
-                        <th>Drug</th>
-                        <th>Quantity</th>
-                        <th>Last Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <RenderRows data={props.data} doSelectDrug={props.doSelectDrug} 
-                    drugSelected={props.drugSelected} isReset={props.isReset}/>
-                </tbody>
-            </Table>
-        );
-    }
 }
 
 function RenderRows(props) {
     return props.data.map((item) => {
-        const isChecked = (!props.isReset && item.rxNumber === props.drugSelected.rxNumber);
-        const {  rxNumber, drug, quantity,date} = item;
+        const isChecked = (!props.isReset && item.transaction === props.transactionSelected.transaction);
+        const {  transaction, date, quantity,price,pricePlan} = item;
         return (
-            <tr key={rxNumber}>
+            <tr key={transaction}>
                 <td>
-                    <div><Form.Check type="radio" label="" name="policies" checked={isChecked} id={rxNumber} onChange={ ()=> {
-                                                                                                props.doSelectDrug(item);
+                    <div><Form.Check type="radio" label="" name="policies" checked={isChecked} id={transaction} onChange={ ()=> {
+                                                                                                props.doSelectTransaction(item);
                                                                                             }}/></div>
                 </td>
-                <td>{rxNumber}</td>
-                <td>{drug}</td>
-                <td>{quantity}</td>
+                <td>{transaction}</td>
                 <td>{date}</td>
+                <td>{quantity}</td>
+                <td>{price}</td>
+                <td>{pricePlan}</td>
             </tr>
         )
     })   
 }
 
+function RenderPaginator(props) {
+    const {
+        active, 
+        count,
+        doSelectPage
+    } = props;
+
+    const pages = Math.ceil(count / 5);
+    let items = [];
+    for (let number = 1; number <= pages; number++) {
+        items.push(
+            <Pagination.Item key={number} active={number === active} onClick={ ()=> {doSelectPage(number);}}>
+              {number}
+            </Pagination.Item>,
+          );
+    };
+
+    return (
+        pages > 1 &&
+            <div className="pagination-row">
+            <Pagination size="sm">{items}</Pagination>
+            </div>
+    );
+}
 

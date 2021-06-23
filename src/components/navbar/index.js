@@ -6,18 +6,18 @@ import Page from './page';
 class NavBar extends Component {
     render() {
         return (
-            <Page   
+            <Page  
+                user={this.props.login.credentials} 
             />
         );
     }
 }
 
 const mapStateToProps = state => ({
-   
+    login: state.login,
 });
 
 const mapDispatchToProps = {
-    
 };
 
 export default withRouter(

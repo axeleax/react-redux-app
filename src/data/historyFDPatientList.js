@@ -3,28 +3,36 @@ const  patients = [
         id: 'ADELANG',
         firstName:'Axel',
         lastName:'Del Angel',
-        policies:[],
+        transactions:[
+        ],
         count: 30,
     },
     {
         id: 'LDIAZ',
         firstName:'Luis',
         lastName:'Diaz',
-        policies:[],
+        transactions:[],
         count: 30,
     },
     {
         id: 'ATORRES',
         firstName:'Aaron',
         lastName:'Torres',
-        policies:[],
+        transactions:[],
         count: 30,
+    },
+    {
+        id: 'HCORONA',
+        firstName:'Hector',
+        lastName:'Coronado',
+        transactions:[],
+        count: 0,
     },
     {
         id: 'PKUMAR',
         firstName:'Pawan',
         lastName:'Kumar',
-        policies:[],
+        transactions:[],
         count: 30,
     }
 ];

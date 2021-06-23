@@ -10,6 +10,8 @@ import demographicLCCPatientList from '../../data/demographicLCCPatientList';
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 function simulateGetApi(action){
 
+  console.log('demographic-request -> ', action.payload);
+
   let demographic = [];
     switch(action.payload.patientType){
         case PATIENT_TYPE.FD:
@@ -35,7 +37,7 @@ function* demographicFindPatient(action) {
   try{
     yield delay(1000);
     const data = simulateGetApi(action);
-    console.log('demographic',data);
+    console.log('demographic-success -> ',data);
     yield put({type:demographicFindPatientSuccessType,data});
   }catch(error){
     yield put({type:demographicFindPatientErrorType,error});

@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 import { BiCloudDownload } from "react-icons/bi";
 import Spinner from 'react-bootstrap/Spinner';
+import Pagination from 'react-bootstrap/Pagination';
 import Alert from '../alert';
 import './style.css';
 
@@ -13,25 +14,27 @@ export default function Page(props) {
     const { 
         loading,
         data,
-        patSeqno,
         policySelected,
-        activePatientTab,
         isReset,
+        loadingTable,
+        activePage,
         doReload,
         doSelectPolicy,
+        doSelectPage,
+        tableError,
         error
     } = props;
 
     const showError = ((error !== undefined && error.code !== ''));
-    const showoOptionDetail = ((policySelected !== undefined && policySelected.policyNumber !== ''));
-    const isEmpty = (data.policies.length === 0);
+    const showErrorTable = ((tableError !== undefined && tableError.code !== ''));
+    const showDetail = ((policySelected !== undefined && policySelected.policyNumber !== ''));
     
     return (
         <div>
                 <div className="reload-icon-div">
-                { loading && <Spinner as="span" animation="border" size="md" role="status" aria-hidden="true" className="load-spinner"/>}
-                <BiCloudDownload className={loading && 'icon-loading'} onClick={() => {doReload(activePatientTab,patSeqno)}} disabled={loading}/> 
-            </div>
+                    { loading && <Spinner as="span" animation="border" size="md" role="status" aria-hidden="true" className="load-spinner"/>}
+                    <BiCloudDownload className={loading && 'icon-loading'} onClick={doReload} disabled={loading}/> 
+                </div>
             { showError ? <Alert isVisible={showError} data={error}/>
             :
                 loading ? 
@@ -52,14 +55,21 @@ export default function Page(props) {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col> 
-                                <InsuranceTable data={data.policies} doSelectPolicy={doSelectPolicy} 
-                                policySelected={policySelected} isReset={isReset} isEmpty={isEmpty} loading={loading}/>
-                            </Col>
-                        </Row>
-                        <div className="divider"/>
-                        <PolicyDetail data={policySelected} isVisible={showoOptionDetail}/>
+                        { showErrorTable ? <Alert isVisible={showErrorTable} data={tableError}/>
+                        :
+                                loadingTable ? 
+                                    <div className={'loading-text'}><h4>Loading...</h4></div>
+                                :
+                                    <Row>
+                                        <Col> 
+                                            <InsuranceTable data={data.policies} doSelectPolicy={doSelectPolicy} 
+                                            policySelected={policySelected} isReset={isReset} loading={loading}/>
+                                            <RenderPaginator count={data.count} active={activePage} doSelectPage={doSelectPage}/>
+                                        </Col>
+                                    </Row>
+                        }
+                        {!showErrorTable && <div className="divider"/>}
+                        <PolicyDetail data={policySelected} isVisible={showDetail}/>
                     </Form>
                 }
         </div>
@@ -109,26 +119,22 @@ function PolicyDetail(props) {
 }
 
 function InsuranceTable(props) {
-    if(props.isEmpty){
-        return <div className={'drugs-not-found'}><h5>Polices not found !!</h5></div>
-    }else{
-        return (
-            <Table bordered responsive size="sm">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Payment Plan</th>
-                        <th>Policy Number</th>
-                        <th>Group Number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <RenderRows data={props.data} doSelectPolicy={props.doSelectPolicy} 
-                    policySelected={props.policySelected} isReset={props.isReset}/>
-                </tbody>
-            </Table>
-        );
-    }
+    return (
+        <Table bordered responsive size="sm">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Payment Plan</th>
+                    <th>Policy Number</th>
+                    <th>Group Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <RenderRows data={props.data} doSelectPolicy={props.doSelectPolicy} 
+                policySelected={props.policySelected} isReset={props.isReset}/>
+            </tbody>
+        </Table>
+    );
 }
 
 function RenderRows(props) {
@@ -148,6 +154,31 @@ function RenderRows(props) {
             </tr>
         )
     })
+}
+
+function RenderPaginator(props) {
+    const {
+        active, 
+        count,
+        doSelectPage
+    } = props;
+
+    const pages = Math.ceil(count / 5);
+    let items = [];
+    for (let number = 1; number <= pages; number++) {
+        items.push(
+            <Pagination.Item key={number} active={number === active} onClick={ ()=> {doSelectPage(number);}}>
+              {number}
+            </Pagination.Item>,
+          );
+    };
+
+    return (
+        pages > 1 &&
+            <div className="pagination-row">
+            <Pagination size="sm">{items}</Pagination>
+            </div>
+    );
 }
 
 

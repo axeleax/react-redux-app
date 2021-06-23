@@ -6,6 +6,13 @@ import { FaUserCircle } from "react-icons/fa";
 import './style.css';
 
 export default function Page(props) {
+
+    const { 
+        user,
+    } = props;
+
+    console.log(user)
+    
     return (
         <Navbar variant="dark">
             <Navbar.Brand>QS1 Application</Navbar.Brand>
@@ -16,7 +23,7 @@ export default function Page(props) {
                 <IconContext.Provider value={{ color: "#FFF", className: "user-icon", size:"2em" }}>
                     <FaUserCircle />
                 </IconContext.Provider>
-                Signed in as: <a href='/#' className="user-name">Steve Oldakowski</a>
+                Signed in as: <a href='/#' className="user-name">{user.id}</a>
             </Navbar.Text>
         </Navbar>
     );

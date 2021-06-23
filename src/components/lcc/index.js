@@ -12,43 +12,29 @@ class LCC extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            patSeqno:'',
-            activePatientTab:PATIENT_TYPE.LCC,
-            activeSegmentTab:'',
-            error:{
-                title:'', 
-                code:'', 
-                message:'',
-                type:''
-            },
-        };
-
         this.onSelectTab = this.onSelectTab.bind(this);
     }
 
-    onSelectTab(activeSegmentTab,patSeqno) {
+    onSelectTab(activeSegmentTab) {
         const {
+            search,
             demographicFindPatientRequest,
             insuranceFindPatientRequest,
             rxProfileFindPatientRequest,
             patientSegmentSelect,
         } = this.props;
 
-        this.setState({activeSegmentTab:activeSegmentTab,patSeqno:patSeqno});
-        
         patientSegmentSelect(activeSegmentTab);
 
         switch(activeSegmentTab){
             case SEGMENT_TYPE.DEMOGRAPHIC:
-                demographicFindPatientRequest({id:patSeqno,patientType:PATIENT_TYPE.LCC});
+                demographicFindPatientRequest({id:search.patient.id,patientType:PATIENT_TYPE.LCC});
             break;
             case SEGMENT_TYPE.INSURANCE:
-                insuranceFindPatientRequest({id:patSeqno,patientType:PATIENT_TYPE.LCC});
+                insuranceFindPatientRequest({id:search.patient.id,patientType:PATIENT_TYPE.LCC});
             break;
             case SEGMENT_TYPE.RX_PROFILE:
-                rxProfileFindPatientRequest({id:patSeqno,patientType:PATIENT_TYPE.LCC}); 
+                rxProfileFindPatientRequest({id:search.patient.id,patientType:PATIENT_TYPE.LCC}); 
             break;
             default:
                 break;
@@ -58,15 +44,13 @@ class LCC extends Component {
     render() {
         
         const {
-            search,
             patient,
         } =  this.props;
 
         const activeSegment = (patient.activePatientTab === PATIENT_TYPE.LCC) ? patient.activeSegmentTab : SEGMENT_TYPE.DEMOGRAPHIC;
-        
+
         return (
             <Page
-                patSeqno={search.patient.id}
                 activeSegment={activeSegment}
                 onSelectTab={this.onSelectTab}
             />

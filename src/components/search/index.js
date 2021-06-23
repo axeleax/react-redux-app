@@ -18,24 +18,6 @@ class Search extends Component {
 
         this.state = {
             patSeqno:'',
-            patient:{
-                id:'',
-                firstName:'',
-                lastName:'',
-                gender:'',
-                birthday:'',
-                ssn:'',
-                emails:[],
-                addresses:[],
-                phones:[],
-                link:'',
-            },
-            error:{
-                title:'', 
-                code:'', 
-                message:'',
-                type:''
-            },
         };
         this.doSearch = this.doSearch.bind(this);
         this.onChangePatSeqno = this.onChangePatSeqno.bind(this);
@@ -59,6 +41,7 @@ class Search extends Component {
 
         let patSeqnoTmp = event.target.value;
         this.setState({patSeqno:patSeqnoTmp});
+        
         if(patSeqnoTmp.trim()===''){
             searchReset();
         }
@@ -80,7 +63,9 @@ class Search extends Component {
 
     render() {
 
-        const {search} = this.props;
+        const {
+            search
+        } = this.props;
         
         return (
             <Page 

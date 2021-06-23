@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import PATIENT_TYPE from './../../enum/patientType';
 import Page from './page';
 import demographicFindPatientRequest from '../../redux/actions/demographicFindPatientRequest';
 import insuranceFindPatientRequest from '../../redux/actions/insuranceFindPatientRequest';
@@ -18,16 +17,6 @@ class Patient extends Component {
             search,
         } = this.props;
         
-        this.state = {
-            activePatientTab:PATIENT_TYPE.FD,
-            error:{
-                title:'', 
-                code:'', 
-                message:'',
-                type:''
-            },
-        };
-
         if(search.patient.id === ""){
             this.props.history.push(`/search`);
         }
@@ -56,7 +45,6 @@ class Patient extends Component {
             patientTypeSelect,
         } = this.props;
 
-        this.setState({activePatientTab:activePatientTab});
         patientTypeSelect(activePatientTab);
         
         switch(patient.activeSegmentTab){
@@ -77,20 +65,17 @@ class Patient extends Component {
     render() {
         const {
             demographic,
+            patient,
             insurance,
             rxProfile,
         } = this.props;
-
-        const {
-            activePatientTab,
-        } = this.state;
 
         const isLoading = (demographic.loading || insurance.loading || rxProfile.loading);
         
         return (
             <Page
                 loading = {isLoading}
-                activePatientTab={activePatientTab}
+                activePatientTab={patient.activePatientTab}
                 onSelectTab={this.onSelectTab}
                 onBack={this.onBack}
             />

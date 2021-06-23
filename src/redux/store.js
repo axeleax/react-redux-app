@@ -7,6 +7,7 @@ import patient from './reducers/patient';
 import demographic from './reducers/demographic';
 import insurance from './reducers/insurance';
 import rxProfile from './reducers/rxProfile';
+import history from './reducers/history';
 import rootSaga from './saga'
 
 const sagaMiddleware = createSagaMiddleware();
@@ -18,6 +19,7 @@ const reducer = combineReducers({
     demographic,
     insurance,
     rxProfile,
+    history,
 });
 
 const store = createStore(reducer,{},composeWithDevTools(applyMiddleware(sagaMiddleware)));

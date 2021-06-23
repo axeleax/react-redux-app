@@ -12,13 +12,13 @@ export default function Page(props) {
 
     return (
         isVisible &&
-            <Alert variant={data.type} transition={true}>
+            <Alert variant={data.type} transition={true} className={'alert-control'}>
             <Alert.Heading><div>
                 <h1 className={'alert-simbol'}><IoIosWarning /></h1>
                 <h3 className='alert-code'>{data.code}</h3>
-                <div>{data.title}</div>
+                <div className='alert-title'>{data.title}</div>
             </div></Alert.Heading>
-                <p>
+                <p className={'alert-message'}>
                     {data.message}
                 </p>
             </Alert>

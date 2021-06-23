@@ -13,35 +13,29 @@ class FD extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            activePatientTab:PATIENT_TYPE.FD,
-            activeSegmentTab:'',
-        };
-
         this.onSelectTab = this.onSelectTab.bind(this);
     }
 
-    onSelectTab(activeSegmentTab,patSeqno) {
+    onSelectTab(activeSegmentTab) {
         const {
+            search,
             demographicFindPatientRequest,
             insuranceFindPatientRequest,
             rxProfileFindPatientRequest,
             patientSegmentSelect,
         } = this.props;
 
-        this.setState({activeSegmentTab:activeSegmentTab,patSeqno:patSeqno});
-
         patientSegmentSelect(activeSegmentTab);
     
         switch(activeSegmentTab){
             case SEGMENT_TYPE.DEMOGRAPHIC:
-                demographicFindPatientRequest({id:patSeqno,patientType:PATIENT_TYPE.FD});    
+                demographicFindPatientRequest({id:search.patient.id,patientType:PATIENT_TYPE.FD});    
             break;
             case SEGMENT_TYPE.INSURANCE:
-                insuranceFindPatientRequest({id:patSeqno,patientType:PATIENT_TYPE.FD});
+                insuranceFindPatientRequest({id:search.patient.id,patientType:PATIENT_TYPE.FD});
             break;
             case SEGMENT_TYPE.RX_PROFILE:
-                rxProfileFindPatientRequest({id:patSeqno,patientType:PATIENT_TYPE.FD});
+                rxProfileFindPatientRequest({id:search.patient.id,patientType:PATIENT_TYPE.FD});
             break;
             default:
                 break;
@@ -51,7 +45,6 @@ class FD extends Component {
     render() {
         
         const {
-            search,
             patient,
         } =  this.props;
 
@@ -59,7 +52,6 @@ class FD extends Component {
 
         return (
             <Page
-                patSeqno={search.patient.id}
                 activeSegment={activeSegment}
                 onSelectTab={this.onSelectTab}
             />

@@ -5,3 +5,6 @@
 .alert-code{
     display: inline-block;
 }
+.alert-control{
+    text-align: center;
+}

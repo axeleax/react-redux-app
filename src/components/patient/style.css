@@ -102,8 +102,6 @@
 }
 .table-responsive{
     height: auto;
-    max-height: 10em;
-    overflow-y: auto;
     display: block;
 }
 .loading-text{
@@ -115,7 +113,7 @@
     border-radius: .25rem;
 }
 
-.drugs-not-found{
+.drugs-not-found, .policies-not-found, .transactions-not-found{
     color: #664d03;
     background-color: #fff3cd;
     border-color: #ffecb5;
@@ -133,3 +131,29 @@
     color:#FFF;
 }
 
+.page-item.active .page-link {
+    color: #fff;
+    background-color: #7F57C2;
+    border-color: #7F57C2;
+}
+.page-link {
+    color: #6c757d;
+}
+.page-link:focus {
+    z-index: 3;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgb(127 87 194 / 25%);
+}
+
+.page-link:hover {
+   
+    color: #7F57C2;
+}
+
+.pagination-row{
+    float: right;
+}
+
+.pagination {
+    margin-bottom: 0;
+}

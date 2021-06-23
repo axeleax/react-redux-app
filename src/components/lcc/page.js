@@ -23,16 +23,13 @@ export default function Page(props) {
 
 function RenderFDDetail(props) {
     const { 
-        patSeqno,
         activeSegment,
         onSelectTab,
     } = props;
 
     return (
         <Container>
-            <Tabs activeKey={activeSegment} id="uncontrolled-tab-example" onSelect={(activeSegmentTab ) => {
-                                                                                                onSelectTab(activeSegmentTab,patSeqno);
-                                                                                            }}>  
+            <Tabs activeKey={activeSegment} id="uncontrolled-tab-example" onSelect={(activeSegmentTab ) => {onSelectTab(activeSegmentTab);}}>  
                 <Tab eventKey={SEGMENT_TYPE.DEMOGRAPHIC} title="Demographic">
                     <Demographic activePatientTab={PATIENT_TYPE.LCC}/>
                 </Tab>

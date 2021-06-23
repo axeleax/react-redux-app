@@ -11,7 +11,6 @@ function reducer(state = defaultState, action) {
     switch (action.type) {
     
         case patientTypeSelectType:
-           
             return {...state, activePatientTab:action.payload};
 
         case patientSegmentSelectType:

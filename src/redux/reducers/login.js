@@ -1,7 +1,7 @@
 import { type as loginRequestType} from '../actions/loginRequest';
 import { type as loginSuccessType} from '../actions/loginSuccess';
 import { type as loginErrorType} from '../actions/loginError';
-
+import { type as loginChangeType} from '../actions/loginChange';
 
 const defaultState = {
     loading:'',
@@ -37,6 +37,10 @@ function reducer(state = defaultState, action) {
             }
 
             return  {...state, credentials:defaultState.credentials, error : error, loading:false}
+
+        case loginChangeType:
+            return {...state ,error:defaultState.error}
+
         default:
             return state;
         

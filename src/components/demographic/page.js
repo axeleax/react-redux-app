@@ -12,8 +12,6 @@ export default function Page(props) {
     const { 
         loading,
         data,
-        patSeqno,
-        activePatientTab,
         doReload,
         error,
     } = props;
@@ -24,7 +22,7 @@ export default function Page(props) {
         <div>
             <div className="reload-icon-div">
                 { loading && <Spinner as="span" animation="border" size="md" role="status" aria-hidden="true" className="load-spinner"/>}
-                <BiCloudDownload className={loading && 'icon-loading'} onClick={() => {doReload(activePatientTab,patSeqno)}} disabled={loading}/> 
+                <BiCloudDownload className={loading && 'icon-loading'} onClick={doReload} disabled={loading}/> 
             </div>   
             {showError ? 
                 <Alert isVisible={showError} data={error}/>

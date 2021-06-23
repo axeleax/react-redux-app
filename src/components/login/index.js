@@ -2,6 +2,7 @@ import { React, Component} from 'react';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
 import loginRequest from '../../redux/actions/loginRequest';
+import loginChange from '../../redux/actions/loginChange';
 import ACCESS_TYPE from '../../enum/accessType';
 import Page from './page';
 
@@ -13,11 +14,6 @@ class Login extends Component {
         this.state = {
             lanId:'',
             password:'',
-            credentials:{
-                access: ACCESS_TYPE.DENIED,
-                redirect:''
-            },
-            error:'',
         };
 
         this.doLogin = this.doLogin.bind(this);
@@ -26,11 +22,21 @@ class Login extends Component {
     }
 
     onChangeUser(event) {
+        const {
+            loginChange,
+        } = this.props; 
+
         this.setState({lanId:event.target.value});
+        loginChange();
     }
 
     onChangePassword(event) {
+        const {
+            loginChange,
+        } = this.props; 
+
         this.setState({password:event.target.value});
+        loginChange();
     }
 
     doLogin() {
@@ -38,13 +44,8 @@ class Login extends Component {
             loginRequest,
         } = this.props; 
 
-        const {
-            lanId,
-            password,
-        } = this.state; 
-
-        if (lanId && password) {
-            loginRequest({lanId:lanId, password:password});
+        if (this.state.lanId && this.state.password) {
+            loginRequest({id:this.state.lanId.trim(), password:this.state.password.trim()});
         }
     }
 
@@ -61,6 +62,8 @@ class Login extends Component {
         return (
             <Page 
                 loading={login.loading}
+                lanId={login.lanId}
+                password={login.password}
                 error={login.error}
                 doLogin={this.doLogin}
                 onChangeUser={this.onChangeUser}
@@ -75,7 +78,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    loginRequest
+    loginRequest,
+    loginChange
 };
 
 export default withRouter(
